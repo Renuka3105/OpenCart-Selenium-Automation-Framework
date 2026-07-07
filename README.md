@@ -135,18 +135,6 @@ After execution:
 
 ---
 
-## 🔄 CI/CD
-
-The framework supports Continuous Integration using Jenkins.
-
-Configured Features:
-
-- Maven Build
-- Test Execution
-- HTML Reports
-- Console Logs
-
----
 
 ## 💡 Framework Highlights
 
