@@ -8,3 +8,5 @@ Reports/
 screenshots/
 test-output/
 *.log
+!docs/screenshots/
+!docs/screenshots/*.png
