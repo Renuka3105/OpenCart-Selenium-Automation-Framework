@@ -14,6 +14,8 @@ public class HomePage extends BasePage {
     }
 
     // Locators
+
+    // Locators
     private final By myAccount = By.xpath("//span[text()='My Account']");
     private final By loginLink = By.linkText("Login");
     private final By registerLink = By.linkText("Register");

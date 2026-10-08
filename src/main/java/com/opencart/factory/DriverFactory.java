@@ -1,10 +1,14 @@
 package com.opencart.factory;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 public class DriverFactory {
 
@@ -15,28 +19,49 @@ public class DriverFactory {
 
     public static WebDriver initializeDriver(String browser) {
 
+        boolean headless = Boolean.parseBoolean(System.getProperty("headless", "false"));
+
         switch (browser.toLowerCase()) {
 
             case "chrome":
                 WebDriverManager.chromedriver().setup();
-                tlDriver.set(new ChromeDriver());
+                ChromeOptions chromeOptions = new ChromeOptions();
+                if (headless) {
+                    chromeOptions.addArguments("--headless=new", "--no-sandbox",
+                            "--disable-dev-shm-usage", "--disable-gpu");
+                }
+                tlDriver.set(new ChromeDriver(chromeOptions));
                 break;
 
             case "edge":
                 WebDriverManager.edgedriver().setup();
-                tlDriver.set(new EdgeDriver());
+                EdgeOptions edgeOptions = new EdgeOptions();
+                if (headless) {
+                    edgeOptions.addArguments("--headless=new", "--no-sandbox",
+                            "--disable-dev-shm-usage", "--disable-gpu");
+                }
+                tlDriver.set(new EdgeDriver(edgeOptions));
                 break;
 
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
-                tlDriver.set(new FirefoxDriver());
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                if (headless) {
+                    firefoxOptions.addArguments("-headless");
+                }
+                tlDriver.set(new FirefoxDriver(firefoxOptions));
                 break;
 
             default:
                 throw new IllegalArgumentException("Invalid Browser : " + browser);
         }
 
-        getDriver().manage().window().maximize();
+        if (headless) {
+            // maximize() is unreliable without a display, so set a fixed size
+            getDriver().manage().window().setSize(new Dimension(1920, 1080));
+        } else {
+            getDriver().manage().window().maximize();
+        }
 
         return getDriver();
     }

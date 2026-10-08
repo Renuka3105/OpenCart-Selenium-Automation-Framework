@@ -24,19 +24,22 @@ public class BaseTest {
         logger.info("========== Test Execution Started ==========");
 
         config = new ConfigReader();
-
         logger.info("Configuration loaded successfully.");
 
-        driver = DriverFactory.initializeDriver(browser);
+        // -Dbrowser=firefox overrides the XML/default value (only if passed)
+        String browserToUse = System.getProperty("browser", browser);
 
-        logger.info("Browser launched: {}", browser);
+        // -DbaseUrl=https://... overrides the URL from config.properties (only if passed)
+        String urlToUse = System.getProperty("baseUrl", config.getApplicationURL());
 
-        DriverFactory.getDriver().get(config.getApplicationURL());
+        driver = DriverFactory.initializeDriver(browserToUse);
+        logger.info("Browser launched: {}", browserToUse);
 
-        logger.info("Application opened: {}", config.getApplicationURL());
+        DriverFactory.getDriver().get(urlToUse);
+        logger.info("Application opened: {}", urlToUse);
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
 
         logger.info("Closing browser.");
