@@ -1,40 +1,42 @@
 # 🛒 OpenCart Automation Framework
 
-A scalable Selenium Test Automation Framework developed for the OpenCart E-commerce application using Java, TestNG, Maven, and the Page Object Model (POM). The framework supports data-driven testing, cross-browser execution, parallel execution, logging, reporting, and CI integration with Jenkins.
+![Selenium Tests](https://github.com/Renuka3105/OpenCart-Selenium-Automation-Framework/actions/workflows/selenium-tests.yml/badge.svg)
+
+A scalable Selenium test automation framework for the OpenCart e-commerce application, built with Java, TestNG, Maven and the Page Object Model (POM). It supports data-driven testing, cross-browser and parallel execution, logging, reporting, and runs headless in a GitHub Actions CI pipeline.
 
 ---
 
 ## 📌 Features
 
-- Page Object Model (POM) Design Pattern
-- Selenium WebDriver with Java
-- TestNG Framework
-- Maven Build Management
-- Data-Driven Testing using Apache POI (Excel)
-- Cross Browser Execution (Chrome, Edge, Firefox)
-- Parallel Test Execution
-- Log4j2 Logging
-- Extent Reports
-- Screenshot Capture on Test Failure
-- Jenkins CI Integration
-- Reusable Utility Classes
-- Configurable Environment using Properties File
+- Page Object Model (POM) design pattern
+- Selenium WebDriver 4 with Java 17
+- TestNG with multiple suites (regression, cross-browser, parallel)
+- Maven build management
+- Data-driven testing using Apache POI (Excel)
+- Cross-browser execution (Chrome, Edge, Firefox)
+- Parallel execution using a ThreadLocal WebDriver
+- Log4j2 logging
+- Extent Reports with screenshots captured on failure
+- Headless execution support (`-Dheadless=true`)
+- **CI with GitHub Actions: runs on every push and pull request, uploads reports as artifacts**
+- Runtime overrides for browser and application URL (`-Dbrowser`, `-DbaseUrl`)
+- Configurable environment using a properties file
 
 ---
 
 ## 🛠 Tech Stack
 
 | Technology | Version |
-|------------|---------|
-| Java | 17+ |
-| Selenium WebDriver | 4.x |
-| TestNG | 7.x |
+| --- | --- |
+| Java | 17 |
+| Selenium WebDriver | 4.31.0 |
+| TestNG | 7.11.0 |
 | Maven | 3.x |
-| Apache POI | 5.x |
-| Log4j2 | 2.x |
-| Extent Reports | Latest |
-| Jenkins | Latest |
-| Git | Latest |
+| WebDriverManager | 6.1.0 |
+| Apache POI | 5.4.1 |
+| Log4j2 | 2.24.3 |
+| Extent Reports | 5.1.2 |
+| CI | GitHub Actions |
 
 ---
 
@@ -42,32 +44,24 @@ A scalable Selenium Test Automation Framework developed for the OpenCart E-comme
 
 ```
 OpenCartAutomationFramework
-│
+├── .github/workflows
+│   └── selenium-tests.yml
 ├── src
 │   ├── main
-│   │   ├── java
-│   │   │   └── com.opencart
-│   │   │       ├── base
-│   │   │       ├── constants
-│   │   │       ├── factory
-│   │   │       ├── listeners
-│   │   │       ├── pages
-│   │   │       └── utilities
-│   │   │
+│   │   ├── java/com/opencart
+│   │   │   ├── constants
+│   │   │   ├── factory
+│   │   │   ├── listeners
+│   │   │   ├── pages
+│   │   │   └── utilities
 │   │   └── resources
 │   │       ├── config.properties
 │   │       ├── log4j2.xml
 │   │       └── testdata.xlsx
-│   │
-│   └── test
-│       └── java
-│           └── com.opencart
-│               ├── base
-│               └── testcases
-│
-├── screenshots
-├── Reports
-├── logs
+│   └── test/java/com/opencart
+│       ├── base
+│       └── testcases
+├── docs/screenshots
 ├── testng.xml
 ├── testng_crossbrowser.xml
 ├── testng_parallel.xml
@@ -78,100 +72,105 @@ OpenCartAutomationFramework
 
 ## ✅ Automated Test Scenarios
 
-- User Registration
-- Valid Login
-- Invalid Login
-- Logout
-- Product Search
-- Add Product to Wishlist
-- Remove Product from Wishlist
-- Add Product to Cart
-- Data-Driven Login using Excel
+16 automated tests (including data-driven iterations) covering:
+
+- Home page verification
+- User registration
+- Valid login, invalid login, and logout
+- Data-driven login using Excel
+- Product search
+- Add and remove products from the wishlist
+- Add product to cart
 
 ---
 
 ## ▶️ Running the Tests
 
-### Clone Repository
+### Clone the repository
 
-```bash
-git clone https://github.com/<your-username>/OpenCartAutomationFramework.git
+```
+git clone https://github.com/Renuka3105/OpenCart-Selenium-Automation-Framework.git
+cd OpenCart-Selenium-Automation-Framework
 ```
 
-### Navigate to Project
+### Run the default suite
 
-```bash
-cd OpenCartAutomationFramework
 ```
-
-### Execute All Tests
-
-```bash
 mvn clean test
 ```
 
-### Execute Cross Browser Suite
+### Run headless
 
-```bash
-mvn clean test -DsuiteXmlFile=testng_crossbrowser.xml
+```
+mvn clean test -Dheadless=true
 ```
 
-### Execute Parallel Suite
+### Run a specific suite
 
-```bash
+```
+mvn clean test -DsuiteXmlFile=testng_crossbrowser.xml
 mvn clean test -DsuiteXmlFile=testng_parallel.xml
 ```
+
+### Override browser or application URL
+
+```
+mvn clean test -Dbrowser=firefox
+mvn clean test -DbaseUrl=https://your-opencart-url
+```
+
+(Don't pass `-Dbrowser` with the cross-browser suite, since it would override every browser in that suite.)
+
+---
+
+## 🔄 CI/CD with GitHub Actions
+
+The workflow in `.github/workflows/selenium-tests.yml` runs automatically on every push and pull request to `master`, and can also be started manually from the **Actions** tab.
+
+**What it does:**
+1. Checks out the code and sets up Java 17 with Maven caching
+2. Runs the TestNG suite in headless Chrome: `mvn clean test -Dheadless=true`
+3. Uploads the Extent report, screenshots, logs and Surefire reports as a downloadable artifact (`test-reports`)
+
+![GitHub Actions run](docs/screenshots/github-actions-run.png)
 
 ---
 
 ## 📊 Reports
 
-After execution:
+After each run you get:
 
-- Extent Report
-- TestNG Report
-- Console Logs
-- Screenshots (Captured on Failure)
+- Extent Report (HTML)
+- TestNG / Surefire reports
+- Log files
+- Screenshots captured on test failure
 
----
-
-
-## 💡 Framework Highlights
-
-- Modular and Scalable Design
-- Easy Maintenance
-- Reusable Components
-- Clean Code Architecture
-- Suitable for Enterprise Automation Projects
+![Extent report](docs/screenshots/extent-report.png)
 
 ---
 
 ## 📚 Design Patterns Used
 
 - Page Object Model (POM)
-- Factory Design Pattern
-- Utility Pattern
+- Factory pattern (`DriverFactory`)
+- ThreadLocal driver for thread-safe parallel execution
+- Utility classes for config, Excel data, and random test data
 
 ---
 
 ## 👩‍💻 Author
 
-**Renuka Chowdary**
+**Renuka Chowdary Muppana**
 
-GitHub: https://github.com/<your-username>
+GitHub: [Renuka3105](https://github.com/Renuka3105)
 
 ---
 
 ## ⭐ Future Enhancements
 
-- Docker Integration
-- GitHub Actions CI/CD
+- Docker integration
 - Selenium Grid
-- Allure Reports
-- Database Validation
-- API Integration
-- Email Report Automation
-
----
-
-If you found this project helpful, please consider giving it a ⭐ on GitHub.
+- Allure reports
+- Database validation
+- API integration
+- Jenkins pipeline
