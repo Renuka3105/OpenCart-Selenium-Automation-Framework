@@ -18,7 +18,7 @@ A scalable Selenium test automation framework for the OpenCart e-commerce applic
 - Log4j2 logging
 - Extent Reports with screenshots captured on failure
 - Headless execution support (`-Dheadless=true`)
-- **CI with GitHub Actions: runs on every push and pull request, uploads reports as artifacts**
+- CI with GitHub Actions: runs on every push and pull request, uploads reports as artifacts
 - Runtime overrides for browser and application URL (`-Dbrowser`, `-DbaseUrl`)
 - Configurable environment using a properties file
 
